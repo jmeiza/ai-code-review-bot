@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from openai import OpenAI
+from typing import List
 import os, json
 from dotenv import load_dotenv
 
@@ -10,34 +11,45 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 router = APIRouter()
 
 #Pydantic model for request body
-class CodeInput(BaseModel):
+class CodeReviewRequest(BaseModel):
     code: str
 
-@router.post("/review")
-async def review_code(input: CodeInput):
-    """
-    Calls OpenAI to review code and returns structurd JSON feedback
-    """
+class ReviewItem(BaseModel):
+    issue: str
+    severity: str
+    suggestions: str
+
+class CodeReviewResponse(BaseModel):
+    bugs: List[ReviewItem]
+    optimizations: List[ReviewItem]
+    style: List[ReviewItem]
+
+
+@router.post("/review", response_model=CodeReviewResponse)
+async def review_code(request: CodeReviewRequest):
 
     try:
         prompt = f"""
-            You are an expert software engineer and code reviewer.
-            Review the following code and return results ONLY in this json format:
+            You are an expert Python code reviewer.
+            Your task is to review the following code and return ONLY a JSON object with these four keys:
+            - "bugs": a list of detected bugs or potentail errors. Consider syntax errors, runtime errors, edge cases, and logical mistakes
+            - "optimizations": a list of performance improvements
+            - "style": a list of style/readablity improvements
+            - "suggestions": a list of general best practice tips
 
-            {{
-                "bugs": [{{ "issue": "<description>", "severity": "critical|minor", "suggestion": "<fix suggestion>" }}],
-                "optimizations": [{{ "issue": "<description>", "severity": "high|medium|low", "suggestion": "<improvement suggestion>" }}],
-                "style": [{{ "issue": "<description>", "severity": "high|medium|low", "suggestion": "<style improvement>" }}]
-            }}
+            For each item in the lists, provide:
+            - "issue": short description
+            - "severity": one of ["low", "medium", "high"]
+            - "suggestions":actionable recommendation
 
             Rules:
-            - Only return JSON. No explanations, text, or comments outside JSON.
-            - Leave arrays empty if there are no issues.
-            - Be concise but specific in each suggestion.
-            - Do not repeat the original code.
+            1. Return ONLY valid JSON. No extra text or explanations outside the JSON.
+            2. If a category has no items, return an empty list
+            3. Be concise but specific.
+            4. Focus on code correctness, performance, readablitiy, and best practices
 
             Code to review:
-            {input.code}
+            {request.code}
         """
         response = client.chat.completions.create(
             model="gpt-4o-mini",
@@ -45,10 +57,8 @@ async def review_code(input: CodeInput):
             temperature=0
         )
 
-        content = response.choices[0].message.content
-        return json.loads(content)
-    
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=500, detail="AI returned invalid JSON.")
+        review_json = response.choices[0].message.content
+        return json.loads(review_json)
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
