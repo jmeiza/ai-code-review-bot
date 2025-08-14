@@ -1,0 +1,86 @@
+/* Whole app background */
+body, #root {
+  background-color: #121212;
+  color: #f5f5f5;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container for the app */
+.app-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+/* Textarea for code input */
+.code-input {
+  width: 100%;
+  min-height: 150px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #1e1e1e;
+  color: #f5f5f5;
+  font-family: monospace;
+  resize: vertical;
+}
+
+/* Submit button */
+.submit-btn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  background-color: #ffcc00;
+  color: #121212;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #e6b800;
+}
+
+/* Review container */
+.review-container {
+  margin-top: 20px;
+}
+
+/* Each category section */
+.review-category {
+  margin-bottom: 20px;
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 10px;
+  background-color: #1e1e1e;
+}
+
+/* Category title */
+.review-category h2 {
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  color: #ffcc00;
+}
+
+/* Each item inside a category */
+.review-item {
+  margin-bottom: 10px;
+  padding: 5px;
+  border-bottom: 1px solid #555;
+}
+
+/* Severity highlights */
+.severity-high {
+  color: #ff4c4c; 
+  font-weight: bold;
+}
+
+.severity-medium {
+  color: #ffb84c; 
+}
+
+.severity-low {
+  color: #4cff4c; 
+}
