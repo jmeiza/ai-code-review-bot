@@ -2,7 +2,7 @@
 
 An interactive web application that reviews code in multiple programming languages and provides feedback on bugs, optimizations, style, and best practices using AI.
 
-## Features
+## 🚀 Features
 
 - Review Python, Java, JavaScript, and other languages.
 - Returns structured feedback as JSON:
@@ -13,15 +13,14 @@ An interactive web application that reviews code in multiple programming languag
 - Real-time code review via a clean frontend interface.
 - Dynamic placeholder in the textarea depending on the selected language.
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 - **Frontend:** React
 - **Backend:** FastAPI
 - **AI Model:** GPT-4o-mini via OpenAI API
 - **Other:** Axios for frontend API requests, CSS modules for styling
 
-
-## Setup
+## ⚙️ Setup
 
 ### Backend
 
@@ -82,7 +81,7 @@ npm start
 3. Select the language
 4. Click Review Code to get structured AI feedback
 
-## Project Structure
+## 📁 Project Structure
 
 ```css
 ai-code-review-bot/
