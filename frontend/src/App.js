@@ -3,17 +3,20 @@ import './App.css';
 
 const App = () => {
   const [code, setCode] = useState("");
+  const [language, setLanguage] = useState("python")
   const [review, setReview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     setLoading(true);
 
     try {
       const res = await fetch("http://127.0.0.1:8000/review", {
         method: "POST",
-        headers: { "Content-Type": "application/json"},
-        body: JSON.stringify({ code })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code, language })
       });
       const data = await res.json();
       setReview(data);
@@ -32,11 +35,21 @@ const App = () => {
         className="code-input"
         value={code} 
         onChange={(e) => setCode(e.target.value)}
-        placeholder="Paste your Python code here..."
+        placeholder={`Paste your ${language} code here...`}
       ></textarea>
-      <button className="submit-btn" onClick={handleSubmit} disabled={loading}>
-        {loading ? "Reviewing..." : "Review Code"}
-      </button>
+
+      <div className="controls">
+        <select className="language-select" value={language} onChange={(e) => setLanguage(e.target.value)} >
+          <option value="python">Python</option>
+          <option value="javascript">JavaScript</option>
+          <option value="java">Java</option>
+          <option value="cpp">C++</option>
+        </select>
+
+        <button className="submit-btn" onClick={handleSubmit} disabled={loading}>
+          {loading ? "Reviewing..." : "Review Code"}
+        </button>
+      </div>
 
       {review && (
         <div className="review-container">

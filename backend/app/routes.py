@@ -13,6 +13,7 @@ router = APIRouter()
 #Pydantic model for request body
 class CodeReviewRequest(BaseModel):
     code: str
+    language: str
 
 class ReviewItem(BaseModel):
     issue: str
@@ -27,11 +28,13 @@ class CodeReviewResponse(BaseModel):
 
 @router.post("/review", response_model=CodeReviewResponse)
 async def review_code(request: CodeReviewRequest):
+    code = request.code
+    language = request.language
 
     try:
         prompt = f"""
-            You are an expert Python code reviewer.
-            Your task is to review the following code and return ONLY a JSON object with these four keys:
+            You are an expert code reviewer.
+            Your task is to review the following {language} code and return ONLY a JSON object with these four keys:
             - "bugs": a list of detected bugs or potentail errors. Consider syntax errors, runtime errors, edge cases, and logical mistakes
             - "optimizations": a list of performance improvements
             - "style": a list of style/readablity improvements
@@ -49,7 +52,7 @@ async def review_code(request: CodeReviewRequest):
             4. Focus on code correctness, performance, readablitiy, and best practices
 
             Code to review:
-            {request.code}
+            {code}
         """
         response = client.chat.completions.create(
             model="gpt-4o-mini",

@@ -27,6 +27,19 @@ body, #root {
   resize: vertical;
 }
 
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.language-select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  background-color: #ffcc00;
+  border: 1px solid #aaa;
+}
+
 /* Submit button */
 .submit-btn {
   margin-top: 10px;
